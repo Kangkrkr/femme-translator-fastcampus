@@ -6,16 +6,71 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>팜므어 번역기</title>
 </head>
+<style>
+.before_container {
+    text-align: center;
+}
+
+.before_container h1 {
+    font-size: 24px;
+}
+
+.translate_btn {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.translate_btn button {
+    font-weight: bold;
+    background-color: bisque;
+    width: 100px;
+    padding: 5px;
+}
+
+.after_container {
+    text-align: center;
+}
+</style>
 <body>
-    <div>
-        <h1>팜므어 번역기</h1>
-        <textarea name="" id="" cols="30" rows="10"></textarea>
-        <button>번역</button>
-        <div class="result"></div>
+    <div class="before_container">
+        <h1>팜므어 번역기 - 강승윤</h1>
+        <textarea name="" id="before_transrate" cols="30" rows="10"></textarea>
     </div>
+    <div class="translate_btn">
+        <button id="translate_btn">번역</button>
+    </div>
+    <div class="after_container">
+        <textarea name="" id="after_transrate" cols="30" rows="10"></textarea>
+    </div>
+    
     <script src="./hangul.js"></script>
     <script>
-        console.log("하이하이")
+        window.onload = function(){
+            var translate_btn = document.getElementById('translate_btn');
+            translate_btn.addEventListener('click', function(e){
+                var original = document.getElementById("before_transrate").value;
+                var splitData = original.split("");
+
+                var resultData = splitData.map(function(e){
+                    var disassempleData = Hangul.disassemble(e);
+                    var isFourLen = (disassempleData.length === 4);
+                    var isMoum = Hangul.isVowel(disassempleData[1]) && Hangul.isVowel(disassempleData[2]);
+
+                    if(isFourLen && isMoum) {
+                        var temp = disassempleData[2];
+                        disassempleData[2] = disassempleData[3];
+                        disassempleData[3] = temp;
+                    }
+
+                    return Hangul.assemble(disassempleData);
+                }).join("");
+                
+                document.getElementById("after_transrate").value = resultData;
+                
+            });
+        };
+        
     </script>
     
 </body>
